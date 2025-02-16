@@ -1,24 +1,22 @@
-import "./style.css";
-import typescriptLogo from "./typescript.svg";
-import viteLogo from "/vite.svg";
-import { setupCounter } from "./counter.ts";
+import http from "http";
+import { rootController, sumController } from "./controller";
 
-document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`;
+const SERVER = http.createServer();
+const HOSTNAME = "0.0.0.0";
+const PORT = 5678;
 
-setupCounter(document.querySelector<HTMLButtonElement>("#counter")!);
+SERVER.on("request", (request, response) => {
+  const URL = request.url;
+
+  if (URL === "/") {
+    rootController(request, response);
+  }
+
+  if (URL === "/sum") {
+    sumController(request, response);
+  }
+});
+
+SERVER.listen(HOSTNAME, PORT, () => {
+  console.log(`listen to requests ${HOSTNAME} ${PORT}`);
+});
